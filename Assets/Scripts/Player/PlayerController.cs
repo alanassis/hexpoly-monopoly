@@ -86,6 +86,8 @@ public class PlayerController : NetworkBehaviour
     public void ShowBuyPanel(NetworkConnection target, int[] priceList, int minPriceIndex) => playerUI.ShowBuyPanel(priceList, minPriceIndex);
     [TargetRpc]
     public void ShowSellPanel(NetworkConnection target, PublicTile[] ownedTiles, int neededPrice) => playerUI.ShowSellPanel(ownedTiles, neededPrice);
+    [TargetRpc]
+    public void ShowSelectPanel(NetworkConnection target, PublicTile[] ownedTiles) => playerUI.ShowSelectPanel(ownedTiles);
 
     // COMMAND TO SERVER
 
@@ -125,6 +127,12 @@ public class PlayerController : NetworkBehaviour
         StartCoroutine(Death());
 
         GameController.Instance.CallbackDesistConfirm();
+    }
+
+    [Command]
+    public void CmdOnSelectConfirm(int selectedIndex)
+    {
+        GameController.Instance.CallbackSelectConfirm(selectedIndex);
     }
 
     [ClientRpc]

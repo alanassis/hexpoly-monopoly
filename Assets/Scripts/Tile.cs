@@ -29,6 +29,9 @@ public class Tile : NetworkBehaviour
     [SyncVar(hook = nameof(OnBuildingTypeChange))]
     public BuildingType currentBuildingType = BuildingType.None;
     [HideInInspector]
+    [SyncVar]
+    public bool isStarlinkOn = false;
+    [HideInInspector]
     public int currentRentPrice
     {
         get
@@ -36,7 +39,8 @@ public class Tile : NetworkBehaviour
             if (currentBuildingType == BuildingType.None) return 0;
 
             float val = (defaultBuyPrice[(int)currentBuildingType - 1] / 100f) * (index * 5);
-            return Mathf.RoundToInt(val);
+            int finalVal = isStarlinkOn == false ? Mathf.RoundToInt(val) : Mathf.RoundToInt(val) * 2;
+            return finalVal;
         }
     }
     [HideInInspector]

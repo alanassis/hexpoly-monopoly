@@ -3,47 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SellController : MonoBehaviour
+public class SelectController : MonoBehaviour
 {
     [HideInInspector]
     public List<ToggleSell> toggles = new List<ToggleSell>();
     [HideInInspector]
     public PlayerUI playerUI;
-    [HideInInspector]
-    public int totalSellCoin = 0;
-    [HideInInspector]
-    public int currentPlayerCoin = 0;
-    [HideInInspector]
-    public int neededPrice = 0;
 
     [SerializeField]
     private Button confirmButton;
 
     private void Update()
     {
-        totalSellCoin = 0;
+        int toggledToggles = 0;
+
         for (int i = 0; i < toggles.Count; i++)
         {
             if (toggles[i].isOn)
             {
-                totalSellCoin += toggles[i].tile.sellPrice;
+                toggledToggles++;
             }
         }
 
-        int playerCoinAfterSell = currentPlayerCoin + totalSellCoin;
-
-        confirmButton.interactable = playerCoinAfterSell >= neededPrice;
+        confirmButton.interactable = toggledToggles == 1;
     }
 
     public void OnConfirmButtonClick()
     {
-        List<int> sellIndexs = new List<int>();
+        int selectedIndex = 0;
 
         for (int i = 0; i < toggles.Count; i++)
         {
             if (toggles[i].isOn)
             {
-                sellIndexs.Add(toggles[i].tile.index);
+                selectedIndex = toggles[i].tile.index;
             }
 
             Destroy(toggles[i].gameObject);
@@ -51,11 +44,6 @@ public class SellController : MonoBehaviour
 
         toggles.Clear();
 
-        playerUI.OnSellControllerConfirm(sellIndexs.ToArray());
-    }
-
-    public void OnDesistButtonClick()
-    {
-        playerUI.OnDesistConfirm();
+        playerUI.OnSelectControllerConfirm(selectedIndex);
     }
 }

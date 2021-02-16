@@ -11,5 +11,5 @@ public class SpecialTile : NetworkBehaviour
 
 public enum SpecialType
 {
-    Portal
+    Portal, Satelite
 }

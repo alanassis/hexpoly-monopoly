@@ -21,6 +21,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private GameObject winnerPanel;
     [SerializeField] private GameObject buyPanel;
     [SerializeField] private GameObject sellPanel;
+    [SerializeField] private GameObject selectPanel;
 
     private int[] buyOptionsPrices;
 
@@ -114,6 +115,38 @@ public class PlayerUI : MonoBehaviour
         sellPanel.SetActive(true);
     }
 
+    public void ShowSelectPanel(PublicTile[] ownedTiles)
+    {
+        Tile[] tiles = GameObject.FindObjectsOfType<Tile>();
+
+        // Configura o botão de confirmação
+        SelectController selectController = selectPanel.GetComponentInChildren<SelectController>();
+        selectController.playerUI = this;
+
+        // Percorre os tile e verifica se é do player
+        foreach (Tile tile in tiles)
+        {
+            // Se não for um Tile ou não for um Tile do Player passa pro próximo
+            if (!ownedTiles.Any(t => t.index == tile.index)) continue;
+
+            // Pega a posição da casa na tela e adiciona uma margem para cima
+            Vector3 viewportPos = Camera.main.WorldToViewportPoint(tile.transform.position);
+            Vector3 screenPos = Camera.main.ViewportToScreenPoint(new Vector3(viewportPos.x, viewportPos.y + 0.1f, viewportPos.z));
+
+            // Cria rotação com a seta do toggle virado para baixo
+            Quaternion pointRot = Quaternion.Euler(0f, 0f, 180f);
+
+            // Instancia o toggle em cima do Tile e passa o index para o componente ToggleSell
+            ToggleSell toggle = Instantiate(toggleCanvas, screenPos, pointRot, selectPanel.transform).GetComponent<ToggleSell>();
+            toggle.tile = ownedTiles.First(t => t.index == tile.index);
+
+            // Adiciona o toggle na lista para uso na confirmação
+            selectController.toggles.Add(toggle);
+        }
+
+        selectPanel.SetActive(true);
+    }
+
     public void SetPlacarPosition(int index)
     {
         RectTransform rect = inGamePlacar.GetComponent<RectTransform>();
@@ -183,5 +216,11 @@ public class PlayerUI : MonoBehaviour
         sellPanel.SetActive(false);
 
         controller.CmdOnDesistConfirm();
+    }
+
+    public void OnSelectControllerConfirm(int selectedIndex)
+    {
+        selectPanel.SetActive(false);
+        controller.CmdOnSelectConfirm(selectedIndex);
     }
 }

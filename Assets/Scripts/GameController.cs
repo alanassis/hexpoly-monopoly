@@ -162,6 +162,9 @@ public class GameController : NetworkBehaviour
             case SpecialType.Portal:
                 StartCoroutine(PortalController());
                 break;
+            case SpecialType.Satelite:
+                StartCoroutine(SateliteController());
+                break;
         }
     }
 
@@ -178,6 +181,19 @@ public class GameController : NetworkBehaviour
         yield return StartCoroutine(AlertAllPlayers(message, true));
 
         PassTheTurn();
+    }
+
+    [Server]
+    private IEnumerator SateliteController()
+    {
+        PlayerController player = UtilGetCurrentPlayer();
+
+        string message = $"O jogador {player.nick} ativou os satélites e inaugurou a StarLink";
+        yield return StartCoroutine(AlertAllPlayers(message, true));
+
+        PublicTile[] playerTiles = UtilGetCurrentPlayerTiles();
+
+        player.ShowSelectPanel(player.connectionToClient, playerTiles);
     }
 
     // Callbacks
@@ -274,6 +290,17 @@ public class GameController : NetworkBehaviour
         waitingForPlayer = false;
     }
 
+    [Server]
+    public void CallbackSelectConfirm(int selectedIndex)
+    {
+        Tile[] tiles = GameObject.FindObjectsOfType<Tile>();
+        Tile selectedTile = tiles.Single(t => t.index == selectedIndex);
+
+        selectedTile.isStarlinkOn = true;
+
+        PassTheTurn();
+    }
+
     // Actions
 
     [Server]
@@ -340,27 +367,9 @@ public class GameController : NetworkBehaviour
 
         yield return StartCoroutine(AlertNoMoney(action == NoMoneyAction.Rent ? "para pagar aluguel" : ""));
 
-        List<PublicTile> ownedTiles = new List<PublicTile>();
+        PublicTile[] playerTiles = UtilGetCurrentPlayerTiles();
 
-        Tile[] tiles = GameObject.FindObjectsOfType<Tile>();
-
-        for (int i = 0; i < tiles.Length; i++)
-        {
-            Tile targetTile = tiles[i].GetComponent<Tile>();
-            if (targetTile && targetTile.currentOwner)
-            {
-                if (targetTile.currentOwner.index == player.index)
-                {
-                    PublicTile temp = new PublicTile();
-                    temp.index = targetTile.index;
-                    temp.sellPrice = targetTile.currentSellPrice;
-
-                    ownedTiles.Add(temp);
-                }
-            }
-        }
-
-        player.ShowSellPanel(player.connectionToClient, ownedTiles.ToArray(), neededPrice);
+        player.ShowSellPanel(player.connectionToClient, playerTiles, neededPrice);
     }
 
     // Alerts
@@ -440,7 +449,7 @@ public class GameController : NetworkBehaviour
         {
             yield return StartCoroutine(AlertNoMoney("para comprar imóvel"));
             PassTheTurn();
-            
+
             yield break;
         }
 
@@ -472,6 +481,33 @@ public class GameController : NetworkBehaviour
         PlayerController player = currentIdentity.GetComponent<PlayerController>();
 
         return player;
+    }
+
+    [Server]
+    private PublicTile[] UtilGetCurrentPlayerTiles()
+    {
+        PlayerController player = UtilGetCurrentPlayer();
+
+        Tile[] allTiles = GameObject.FindObjectsOfType<Tile>();
+
+        List<PublicTile> playerTiles = new List<PublicTile>();
+
+        for (int i = 0; i < allTiles.Length; i++)
+        {
+            if (allTiles[i] && allTiles[i].currentOwner)
+            {
+                if (allTiles[i].currentOwner.index == player.index)
+                {
+                    PublicTile temp = new PublicTile();
+                    temp.index = allTiles[i].index;
+                    temp.sellPrice = allTiles[i].currentSellPrice;
+
+                    playerTiles.Add(temp);
+                }
+            }
+        }
+
+        return playerTiles.ToArray();
     }
 }
 
