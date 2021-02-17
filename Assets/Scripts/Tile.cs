@@ -29,7 +29,7 @@ public class Tile : NetworkBehaviour
     [SyncVar(hook = nameof(OnBuildingTypeChange))]
     public BuildingType currentBuildingType = BuildingType.None;
     [HideInInspector]
-    [SyncVar]
+    [SyncVar(hook = nameof(OnStarlinkChange))]
     public bool isStarlinkOn = false;
     [HideInInspector]
     public int currentRentPrice
@@ -101,6 +101,8 @@ public class Tile : NetworkBehaviour
     }
 
     private void OnBuildingTypeChange(BuildingType _, BuildingType newB) => SetPriceText();
+
+    private void OnStarlinkChange(bool _, bool newV) => SetPriceText();
 
     public void SetPriceText()
     {
