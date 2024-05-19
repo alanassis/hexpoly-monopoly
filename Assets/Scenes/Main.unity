@@ -154,9 +154,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   spawnBonus: 300000
-  minRandomMove: 2
-  maxRandomMove: 12
-  portalRoundBlockCount: 3
+  minRandomMove: 1
+  maxRandomMove: 6
+  portalRoundBlockCount: 2
   shortAlertMessageDelay: 2
   longAlertMessageDelay: 4
   delayBetweenActions: 0.5

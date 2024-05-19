@@ -563,7 +563,7 @@ GameObject:
   - component: {fileID: 916480239}
   - component: {fileID: 916480238}
   m_Layer: 5
-  m_Name: PlayerPanel (1)
+  m_Name: PlayerPanel-4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -639,7 +639,7 @@ GameObject:
   - component: {fileID: 937038227}
   - component: {fileID: 937038226}
   m_Layer: 5
-  m_Name: PlayerPanel (2)
+  m_Name: PlayerPanel-1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -926,7 +926,7 @@ GameObject:
   - component: {fileID: 1258865614}
   - component: {fileID: 1258865613}
   m_Layer: 5
-  m_Name: PlayerPanel
+  m_Name: PlayerPanel-3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1132,7 +1132,7 @@ GameObject:
   - component: {fileID: 1392358953}
   - component: {fileID: 1392358952}
   m_Layer: 5
-  m_Name: PlayerPanel (3)
+  m_Name: PlayerPanel-2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3761,15 +3761,15 @@ MonoBehaviour:
   index: 0
   roomPanel: {fileID: 956514101}
   displayNameTexts:
-  - {fileID: 1186262789}
-  - {fileID: 2029781709}
   - {fileID: 1670636835}
   - {fileID: 175055127}
+  - {fileID: 1186262789}
+  - {fileID: 2029781709}
   isReadyTexts:
-  - {fileID: 1608514611}
-  - {fileID: 377602352}
   - {fileID: 241382778}
   - {fileID: 1999666419}
+  - {fileID: 1608514611}
+  - {fileID: 377602352}
   addressText: {fileID: 2326565094034676650}
   readyUpButtonText: {fileID: 6056187928593764152}
   displayName: Loading...
